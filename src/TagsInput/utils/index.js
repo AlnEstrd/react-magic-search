@@ -10,9 +10,9 @@ export const filterSuggestion = (suggestions, selected) => {
 }
 export const getTypeItemsToStringArray = (selections, type) => {
     let itemsArray = [];
-    selections.forEach(x => {
-        if(x.type === type){
-            itemsArray.push(x.value)
+    selections.forEach(selection => {
+        if(selection.type === type){
+            itemsArray.push(selection.value)
         }
     });
     return itemsArray;

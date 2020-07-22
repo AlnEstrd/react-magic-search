@@ -6,7 +6,7 @@ const SuggestionColumn = ({title, keyName, suggestions, onChange}) => (
         <ul>{suggestions.map((suggestion, key) => 
             <li key={key}>
                 <div onClick={() => onChange(suggestion, keyName)}>
-                    <span> {suggestion} </span>
+                    <span> {suggestion.label} </span>
                 </div>
             </li>
         )}</ul>

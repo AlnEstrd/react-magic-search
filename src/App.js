@@ -2,10 +2,20 @@ import React, { useState } from 'react';
 import TagsInput from './TagsInput';
 const suggestionsMock = {
   parameters: [
-    'name', 'last name', 'age', 'email', 'boss email', 'department', 'manager', 'status', 'country', 'region'
+    {label: 'Name', type: 'string', value:'name'}, 
+    {label: 'Second name', type: 'string', value:'second_name'}, 
+    {label: 'Last name', type: 'string', value:'last_name'}, 
+    {label: 'Department', type: 'option', value:'department'}, 
+    {label: 'Manager', type: 'option', value:'manager'}, 
+    {label: 'Status', type: 'boolean', value:'status'}, 
+    {label: 'Country', type: 'option', value:'country'}, 
+    {label: 'Region', type: 'option', value:'region'}, 
   ],
   operators: [
-    '=', '==', '!=', 'rango de edades'
+    {label: 'Contains', type: 'string', value:'='}, 
+    {label: 'Equals', type: 'string', value:'=='}, 
+    {label: 'Not in', type: 'string', value:'!='}, 
+    {label: 'Range', type: 'string', value:'range'}, 
   ],
   values: []
 }
@@ -17,7 +27,7 @@ function App() {
   };
   const onOperatorChange = value => {
     console.log(queryArray);
-    setSuggestion({...suggestions, values: ['1']})
+    setSuggestion({...suggestions, values: [{label:'One', type:'string', value: '1'}]})
   }
   return (
     <div>
