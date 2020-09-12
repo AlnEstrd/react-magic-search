@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TagsInput from './TagsInput';
+import TagsInput from './magic-search';
 const suggestionsMock = {
   parameters: [
     {label: 'Name', type: 'string', value:'name'}, 
@@ -12,10 +12,17 @@ const suggestionsMock = {
     {label: 'Region', type: 'option', value:'region'}, 
   ],
   operators: [
-    {label: 'Contains', type: 'string', value:'='}, 
-    {label: 'Equals', type: 'string', value:'=='}, 
-    {label: 'Not in', type: 'string', value:'!='}, 
-    {label: 'Range', type: 'string', value:'range'}, 
+    {label: 'Contains', value:'contains'}, 
+    {label: 'Equals',  value:'exact'}, 
+    {label: 'Not in',  value:'not_equal'}, 
+    {label: 'Range',  value:'range'}, 
+    {label: 'True',  value:'true'}, 
+    {label: 'False',  value:'false'}, 
+  ],
+  rules: [
+    {type: 'string', operators: ['contains', 'exact']},
+    {type: 'boolean', operator: ['true', 'false']},
+    {type: 'option', operator: ['equals']}
   ],
   values: []
 }
@@ -33,6 +40,9 @@ function App() {
     <div>
       <h1>Magic Search</h1>
       <TagsInput 
+        queryTags={}
+        queryArray={}
+        removeQueryTag={}
         suggestions={suggestions}
         queryTags={selectedTags}
         onOperatorChange={onOperatorChange}  />

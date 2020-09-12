@@ -1,22 +1,36 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import Suggestions from './suggestions';
 import Tag from './tag';
 import controlsManager from "./utils/controlsManager";
 
-function TagsInput ({queryTags, suggestions, onOperatorChange}) {
+function TagsInput ({queryTags, queryArray, suggestions, onOperatorChange, removeQueryTag}) {
     const [selections, setSelections] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState(suggestions);
 
+    useEffect(() => {
+        setFilteredSuggestions(suggestions)
+    }, [suggestions])
+
     const addTag = (type, value) => {
         setSelections([...selections, {type: type, value: value}]);
+        
+        if(type === 'operator'){
+            onOperatorChange(value, selections);
+        }
         setInputValue('');
     }
     
     const removeTag = ({key, type}) => {
         setSelections([...selections.filter(tag => selections.indexOf(tag) !== key)]);
     } 
+
+    const pushQuery = () =>  {
+        queryTags(selections);
+        setSelections([]);
+        setShowSuggestions(false);
+    };
 
     const searchForInput = (value) => {
         let inputValue = value.currentTarget.value
@@ -32,25 +46,12 @@ function TagsInput ({queryTags, suggestions, onOperatorChange}) {
         }
     }
 
-    const handleInputFocus = () => {
-        setFilteredSuggestions({...suggestions, parameters: suggestions.parameters});
-        setShowSuggestions(true);
-    }
-
     const handleControls = event => {
         controlsManager(
             event, inputValue, 
             selections, suggestions, 
-            addTag, removeTag, setShowSuggestions)
+            addTag, removeTag, setShowSuggestions, pushQuery)
     };
-
-    const addTagOfSuggestion = (value, type) => {
-        addTag(type, value);
-        setShowSuggestions(false);
-        if(type === 'operator'){
-            onOperatorChange(value);
-        }
-    }
 
     return (<>
         <div className="tags-input">
@@ -68,7 +69,7 @@ function TagsInput ({queryTags, suggestions, onOperatorChange}) {
                 className='query-input'
                 type="text"
                 value={inputValue}
-                onFocus={handleInputFocus}
+                onFocus={() => setShowSuggestions(true)}
                 onKeyUp={handleControls}
                 onChange={searchForInput}
                 placeholder="Press enter to add tags"
@@ -78,8 +79,22 @@ function TagsInput ({queryTags, suggestions, onOperatorChange}) {
             <Suggestions 
                 selections={selections}
                 suggestions={filteredSuggestions} 
-                onChange={addTagOfSuggestion}
+                onChange={addTag}
             />
+        }
+        {queryArray && queryArray.length > 0 &&
+        <div className="tags-global">
+        <ul id="tags">
+            {queryArray.map((tag, key) => <Fragment key={key}>
+                <Tag 
+                    tag={tag} 
+                    type={'global'} 
+                    keyInArray={key}
+                    remove={removeQueryTag}
+                />
+            </Fragment>)}
+        </ul>
+        </div>
         }
     </>);
 };
